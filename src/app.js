@@ -1,7 +1,12 @@
 import express from "express";
+import dotenv from "dotenv";
 
 const app = express();
 const PORT = 3333;
+
+dotenv.config();
+
+app.use(express.json());
 
 // Login
 app.post("/login", (req, res) => {
