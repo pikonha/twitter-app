@@ -1,0 +1,18 @@
+{
+  "users": [
+    {
+      "id": "89b3cb54-9efd-49f1-b08e-777121689b9a",
+      "username": "picollo",
+      "age": 23
+    }
+  ],
+  "tweets": [
+    {
+      "id": "e26b81ab-c813-4ef3-ac83-84ef75e87c6c",
+      "owner": "89b3cb54-9efd-49f1-b08e-777121689b9a",
+      "created_at": 1580912013615,
+      "likes": 1,
+      "text": "Bem vindo a Geek Hunter!"
+    }
+  ]
+}
