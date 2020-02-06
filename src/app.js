@@ -1,20 +1,24 @@
 import express from "express";
 import dotenv from "dotenv";
+import jsonServer from "json-server"
+import path from "path"
 
 const app = express();
 const PORT = 3333;
 
+const routes = jsonServer.router(path.join(__dirname, "..", "db.json"));
+
+app.use('/api', routes);
+app.use(express.json());
+
 dotenv.config();
 
-app.use(express.json());
+// Criar usuário
+app.post("/register", (req, res) => {
+});
 
 // Login
 app.post("/login", (req, res) => {
-  // Response
-});
-
-// Criar usuário
-app.post("/users", (req, res) => {
   // Response
 });
 
@@ -40,7 +44,7 @@ app.post("/tweets", (req, res) => {
 
 // Encontrar todos os tweets
 app.get("/tweets", (req, res) => {
-  // Response
+  
 });
 
 // Encontrar tweet específico

@@ -14,7 +14,7 @@
     "nodemon": "^2.0.2"
   },
   "scripts": {
-    "start": "json-server --watch db.json && babel-node src/app.js",
-    "dev": "json-server --watch db.json && nodemon --exec babel-node src/app.js"
+    "start": "babel-node src/app.js",
+    "dev": "nodemon --exec babel-node src/app.js"
   }
 }
