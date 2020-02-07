@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import Axios from "axios";
 
 const app = express();
 const PORT = 3333;
@@ -7,6 +8,17 @@ const PORT = 3333;
 dotenv.config();
 
 app.use(express.json());
+
+app.get("/", async (req, res) => {
+  try {
+    const r = await Axios.get("http://localhost:3000/tweets")
+    res.send(r.data)
+  } catch (error) {
+    res.status(400).send(error)
+  }
+  // res.send(" uaehgeaihueaihu ")  
+});
+
 
 // Login
 app.post("/login", (req, res) => {
