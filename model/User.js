@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+const mongoose = require("mongoose")
 
 const User = new mongoose.Schema({
     username: {
@@ -15,7 +15,7 @@ const User = new mongoose.Schema({
         default: Date.now
     },
     tweets: [{
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Tweet'
     }]
 })
