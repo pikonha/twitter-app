@@ -9,7 +9,7 @@ const Tweet = require("../model/Tweet");
 const router = new Router();
 
 // Criar usuário
-router.post("/register", async (req, res) => {
+router.post("/register", async (req, res, next) => {
   try {
     const { username, password } = req.body;
 
@@ -34,12 +34,13 @@ router.post("/register", async (req, res) => {
       username: user.username
     });
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400);
+    next(error);
   }
 });
 
 // Login
-router.post("/login", async (req, res) => {
+router.post("/login", async (req, res, next) => {
   try {
     const { username, password } = req.body;
 
@@ -57,14 +58,13 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign({ _id: user.id }, process.env.JWT_SECRET);
     res.header("auth-token", token).send({ token });
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400);
+    next(error);
   }
 });
 
-router.use(authenticate);
-
 // Encontrar usuários
-router.get("/users", async (req, res) => {
+router.get("/users", authenticate, async (req, res, next) => {
   try {
     const users = await User.find({});
 
@@ -78,12 +78,13 @@ router.get("/users", async (req, res) => {
       }))
     );
   } catch (err) {
-    res.status(400).send(err);
+    res.status(400);
+    next(err);
   }
 });
 
 // Encontrar usuário
-router.get("/users/:id", async (req, res) => {
+router.get("/users/:id", authenticate, async (req, res, next) => {
   const { id } = req.params;
 
   try {
@@ -96,44 +97,42 @@ router.get("/users/:id", async (req, res) => {
       username: user.username
     });
   } catch (err) {
-    res.status(400).send(err);
+    res.status(400);
+    next(err);
   }
 });
 
 // Criar tweets
-router.post("/tweets", async (req, res) => {
+router.post("/tweets", authenticate, async (req, res, next) => {
   const { content } = req.body;
 
-  try {
-    const tweet = await Tweet.create({ owner: req.user._id, content });
+  const tweet = await Tweet.create({ owner: req.user._id, content });
 
-    if (!tweet) res.status(400).send({ error: "Unable to create tweet." });
+  if (!tweet) res.status(400).send({ error: "Unable to create tweet." });
 
-    res.status(201).send({
-      id: tweet._id,
-      owner: tweet.owner,
-      content: tweet.content,
-      likes: tweet.likes
-    });
-  } catch (err) {
-    res.status(400).send(err);
-  }
+  res.status(201).send({
+    id: tweet._id,
+    owner: tweet.owner,
+    content: tweet.content,
+    likes: tweet.likes
+  });
 });
 
 // Deletar tweet específico
-router.delete("/tweets/:id", async (req, res) => {
+router.delete("/tweets/:id", authenticate, async (req, res, next) => {
   const { id } = req.params;
 
   try {
     await Tweet.deleteOne({ _id: id });
     res.status(200).send({ message: "Tweet deleted." });
   } catch (err) {
-    res.status(400).send(err);
+    res.status(400);
+    next(err);
   }
 });
 
 // Atualizar tweet específico (like/unlike)
-router.put("/tweets/:id", async (req, res) => {
+router.put("/tweets/:id", authenticate, async (req, res, next) => {
   const { id } = req.params;
 
   try {
@@ -156,12 +155,13 @@ router.put("/tweets/:id", async (req, res) => {
 
     res.status(200).send(tweet);
   } catch (err) {
-    res.status(400).send(err);
+    res.status(400);
+    next(err);
   }
 });
 
 // Encontrar tweets do usuário
-router.get("/users/:id/tweets", async (req, res) => {
+router.get("/users/:id/tweets", authenticate, async (req, res, next) => {
   const { id } = req.params;
 
   try {
@@ -169,23 +169,25 @@ router.get("/users/:id/tweets", async (req, res) => {
 
     res.status(200).send(tweets);
   } catch (err) {
-    res.status(400).send(err);
+    res.status(400);
+    next(err);
   }
 });
 
 // Encontrar todos os tweets
-router.get("/tweets", async (req, res) => {
+router.get("/tweets", authenticate, async (req, res, next) => {
   try {
     const tweets = await Tweet.find({});
 
     res.status(200).send(tweets);
   } catch (err) {
-    res.status(400).send(err);
+    res.status(400);
+    next(err);
   }
 });
 
 // Encontrar tweet específico
-router.get("/tweets/:id", async (req, res) => {
+router.get("/tweets/:id", authenticate, async (req, res, next) => {
   const { id } = req.params;
 
   try {
@@ -195,7 +197,8 @@ router.get("/tweets/:id", async (req, res) => {
 
     res.status(200).send(tweet);
   } catch (err) {
-    res.status(400).send(err);
+    res.status(400);
+    next(err);
   }
 });
 

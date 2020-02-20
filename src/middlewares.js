@@ -11,7 +11,7 @@ const errorHandling = (error, req, res, next) => {
   res.statusCode = statusCode;
   res.json({
     message: error.message,
-    trace: process.env.NODE_ENV === "production" ? "🤓" : error.trace
+    stack: process.env.NODE_ENV === "production" ? "🤓" : error.stack
   });
 };
 
