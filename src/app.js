@@ -4,9 +4,9 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const authToken = require("./auth")
-const User = require("../model/User")
-const Tweet = require("../model/Tweet")
+const authenticate = require("./auth");
+const User = require("../model/User");
+const Tweet = require("../model/Tweet");
 
 dotenv.config();
 const app = express();
@@ -14,13 +14,13 @@ const app = express();
 app.use(express.json());
 
 mongoose.connect(
-  process.env.DB_URL, 
-  { 
+  process.env.DB_URL,
+  {
     useNewUrlParser: true,
     useUnifiedTopology: true
   },
-  () => console.log("Connected to the database!"))
-
+  () => console.log("Connected to the database!")
+);
 
 // Criar usuário
 app.post("/register", async (req, res) => {
@@ -28,9 +28,10 @@ app.post("/register", async (req, res) => {
     const { username, password } = req.body;
 
     // Verificar se username é valido
-    const userExists = await User.findOne({username});
+    const userExists = await User.findOne({ username });
 
-    if (userExists) return res.status(400).send({error: "Username already in use."});
+    if (userExists)
+      return res.status(400).send({ error: "Username already in use." });
 
     // Criptografar a senha
     const salt = await bcrypt.genSalt(10);
@@ -40,18 +41,16 @@ app.post("/register", async (req, res) => {
     const user = await User.create({
       username,
       password: hash
-    })
-    
+    });
+
     res.status(201).send({
       id: user.id,
       username: user.username
-    });    
-
-  } catch (error) {       
+    });
+  } catch (error) {
     res.status(400).send(error);
   }
 });
-
 
 // Login
 app.post("/login", async (req, res) => {
@@ -59,41 +58,40 @@ app.post("/login", async (req, res) => {
     const { username, password } = req.body;
 
     // Verificar se username é valido
-    const user = await User.findOne({username})
-    
-    if (!user) return res.status(400).send({error: "Username not found."});
+    const user = await User.findOne({ username });
+
+    if (!user) return res.status(400).send({ error: "Username not found." });
 
     // Verifica se a senha é válida
     const validPassword = await bcrypt.compare(password, user.password);
-    
+
     if (!validPassword) return res.status(400).send("Invalid password.");
 
     // Criar token de validação de usuário
-    const token = jwt.sign({_id: user.id}, process.env.JWT_SECRET);    
-    res.header('auth-token', token).send({token});
-
-  } catch (error) {            
+    const token = jwt.sign({ _id: user.id }, process.env.JWT_SECRET);
+    res.header("auth-token", token).send({ token });
+  } catch (error) {
     res.status(400).send(error);
   }
 });
 
-app.use(authToken)
+app.use(authenticate);
 
 // Encontrar usuários
 app.get("/users", async (req, res) => {
   try {
-    const users = await User.find({})
+    const users = await User.find({});
 
-    if (!users.length) return res.status(400).send({error: "Unable to get users."});
+    if (!users.length)
+      return res.status(400).send({ error: "Unable to get users." });
 
-    res.status(200).send(users.map(user => (
-      {
+    res.status(200).send(
+      users.map(user => ({
         _id: user.id,
         username: user.username
-      }
-    )))
-
-  } catch (err) {        
+      }))
+    );
+  } catch (err) {
     res.status(400).send(err);
   }
 });
@@ -103,16 +101,15 @@ app.get("/users/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    const user = await User.findById(id)    
+    const user = await User.findById(id);
 
-    if (!user) return res.status(400).send({error: "User not found."});
-    
+    if (!user) return res.status(400).send({ error: "User not found." });
+
     res.status(200).send({
       id: user._id,
       username: user.username
-    })
-
-  } catch (err) {           
+    });
+  } catch (err) {
     res.status(400).send(err);
   }
 });
@@ -122,17 +119,16 @@ app.post("/tweets", async (req, res) => {
   const { content } = req.body;
 
   try {
-    const tweet = await Tweet.create({owner: req.user._id, content});
-    
-    if (!tweet) res.status(400).send({error: "Unable to create tweet."})
-    
+    const tweet = await Tweet.create({ owner: req.user._id, content });
+
+    if (!tweet) res.status(400).send({ error: "Unable to create tweet." });
+
     res.status(201).send({
       id: tweet._id,
       owner: tweet.owner,
       content: tweet.content,
       likes: tweet.likes
-    })
-
+    });
   } catch (err) {
     res.status(400).send(err);
   }
@@ -143,9 +139,9 @@ app.delete("/tweets/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    await Tweet.deleteOne({_id: id});    
-    res.status(200).send({message: "Tweet deleted."})
-  } catch (err) {    
+    await Tweet.deleteOne({ _id: id });
+    res.status(200).send({ message: "Tweet deleted." });
+  } catch (err) {
     res.status(400).send(err);
   }
 });
@@ -155,19 +151,20 @@ app.put("/tweets/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    const tweet = await Tweet.findById(id);  
-    
-    if (!tweet) return res.status(400).send({error: "Tweet not found."});
+    const tweet = await Tweet.findById(id);
 
-    if (tweet.owner === req.user._id) return res.status(400).send({error: "Unable to update tweet."})
+    if (!tweet) return res.status(400).send({ error: "Tweet not found." });
 
-    const tweetAlreadyLiked = tweet.likes.some(like => like == req.user._id)
-    
+    if (tweet.owner === req.user._id)
+      return res.status(400).send({ error: "Unable to update tweet." });
+
+    const tweetAlreadyLiked = tweet.likes.some(like => like == req.user._id);
+
     if (tweetAlreadyLiked) {
       tweet.likes = tweet.likes.filter(like => like != req.user._id);
     } else {
-      tweet.likes.push(req.user._id)
-    }    
+      tweet.likes.push(req.user._id);
+    }
 
     tweet.save();
 
@@ -177,8 +174,8 @@ app.put("/tweets/:id", async (req, res) => {
       content: tweet.content,
       likes: tweet.likes,
       date: tweet.date
-    })
-  } catch (err) {           
+    });
+  } catch (err) {
     res.status(400).send(err);
   }
 });
@@ -188,7 +185,7 @@ app.get("/users/:id/tweets", async (req, res) => {
   const { id } = req.params;
 
   try {
-    const tweets = await Tweet.find({owner: id})
+    const tweets = await Tweet.find({ owner: id });
 
     const formattedTweets = tweets.map(tweet => ({
       id: tweet._id,
@@ -196,11 +193,10 @@ app.get("/users/:id/tweets", async (req, res) => {
       content: tweet.content,
       likes: tweet.likes,
       date: tweet.date
-    }))
+    }));
 
-    res.status(200).send(formattedTweets)
-
-  } catch (err) {               
+    res.status(200).send(formattedTweets);
+  } catch (err) {
     res.status(400).send(err);
   }
 });
@@ -208,7 +204,7 @@ app.get("/users/:id/tweets", async (req, res) => {
 // Encontrar todos os tweets
 app.get("/tweets", async (req, res) => {
   try {
-    const tweets = await Tweet.find({})
+    const tweets = await Tweet.find({});
 
     const formattedTweets = tweets.map(tweet => ({
       id: tweet._id,
@@ -216,11 +212,10 @@ app.get("/tweets", async (req, res) => {
       content: tweet.content,
       likes: tweet.likes,
       date: tweet.date
-    }))
+    }));
 
-    res.status(200).send(formattedTweets)
-
-  } catch (err) {           
+    res.status(200).send(formattedTweets);
+  } catch (err) {
     res.status(400).send(err);
   }
 });
@@ -230,9 +225,9 @@ app.get("/tweets/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    const tweet = await Tweet.findById(id)
+    const tweet = await Tweet.findById(id);
 
-    if (!tweet) return res.status(400).send({error: "Tweet not found."});
+    if (!tweet) return res.status(400).send({ error: "Tweet not found." });
 
     res.status(200).send({
       id: tweet._id,
@@ -240,11 +235,27 @@ app.get("/tweets/:id", async (req, res) => {
       content: tweet.content,
       likes: tweet.likes,
       date: tweet.date
-    })
-
-  } catch (err) {           
+    });
+  } catch (err) {
     res.status(400).send(err);
   }
+});
+
+// Middleware recurso não encontrado
+app.use((req, res, next) => {
+  const error = new Error(`Not found - ${req.originalUrl}`);
+  res.status(404);
+  next(error);
+});
+
+// Middeware de tratamento de erro
+app.use((error, req, res, next) => {
+  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  res.statusCode = statusCode;
+  res.json({
+    message: error.message,
+    trace: error.trace
+  });
 });
 
 const PORT = 3333;
@@ -252,4 +263,3 @@ const PORT = 3333;
 app.listen(PORT, () => {
   console.log(`Server running on port: ${PORT}`);
 });
-
