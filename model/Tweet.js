@@ -1,23 +1,26 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
-const Tweet = new mongoose.Schema({
+const Tweet = new mongoose.Schema(
+  {
     owner: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
     },
     content: {
-        type: String,
-        required: true,
-        min: 1
+      type: String,
+      required: true,
+      min: 1
     },
-    likes: [{       
+    likes: [
+      {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }],
-    date: {
-        type: Date,
-        default: Date.now
-    }
-})
+        ref: "User"
+      }
+    ]
+  },
+  {
+    timestamps: true
+  }
+);
 
-module.exports = mongoose.model("Tweet", Tweet)
+module.exports = mongoose.model("Tweet", Tweet);
