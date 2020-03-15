@@ -5,13 +5,16 @@ export const Container = styled.div`
   flex-direction: column;
   padding: 1rem;
   border: 1px solid #cccccc;
+  background: white;
+  max-width: 600px;
+  width: 100%;
 
   > textarea {
     resize: none;
     margin-bottom: 1rem;
-    color: #1da1f2;
     border: 1px solid #1da1f2;
     border-radius: 10px;
+    padding: 0.6rem;
   }
 
   > div {
