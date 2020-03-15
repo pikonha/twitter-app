@@ -1,12 +1,15 @@
 import React from "react";
 
-import TweetForm from "./components/TweetForm";
+import Routes from "./Routes";
+import { Container, Content } from "./styled";
 
 function App() {
   return (
-    <div className="App">
-      <TweetForm></TweetForm>
-    </div>
+    <Container className="App">
+      <Content>
+        <Routes />
+      </Content>
+    </Container>
   );
 }
 
