@@ -6,8 +6,9 @@ export const Container = styled.div`
   padding: 1rem;
   border: 1px solid #cccccc;
   background: white;
-  max-width: 600px;
+  max-width: 640px;
   width: 100%;
+  box-sizing: border-box;
 
   > textarea {
     resize: none;

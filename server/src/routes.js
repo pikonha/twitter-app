@@ -47,7 +47,9 @@ router.post("/login", async (req, res, next) => {
     // Verificar se username é valido
     const user = await User.findOne({ username });
 
-    if (!user) return res.status(400).send({ error: "Username not found." });
+    if (!user) return res.status(404).send({ error: "Username not found." });
+
+    console.log(user);
 
     // Verifica se a senha é válida
     const validPassword = await bcrypt.compare(password, user.password);

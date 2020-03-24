@@ -6,7 +6,7 @@ export const Container = styled.div`
   border-radius: 20px;
   max-width: 300px;
   width: 100%;
-  height: 150px;
+  max-height: 300px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -65,4 +65,11 @@ export const Button = styled.button`
     background: #1da1f2;
     color: white;
   }
+`;
+
+export const ErrorWarning = styled.div`
+  border: 1px solid red;
+  color: red;
+  border-radius: 20px;
+  padding: 0.5rem;
 `;
