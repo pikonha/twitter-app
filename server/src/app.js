@@ -13,7 +13,7 @@ app.use(morgan("common"));
 app.use(express.json());
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN
+    origin: process.env.CORS_ORIGIN || "http://localhost:3000"
   })
 );
 
@@ -34,7 +34,7 @@ app.use(middlewares.notFound);
 // Middeware de tratamento de erro
 app.use(middlewares.errorHandling);
 
-const PORT = 3333;
+const PORT = process.env.PORT || 3333;
 
 app.listen(PORT, () => {
   console.log(`Server running on port: ${PORT}`);
