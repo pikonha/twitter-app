@@ -13,15 +13,22 @@ export class CreateTweetComments1588398257301 implements MigrationInterface {
         columns: [
           {
             name: 'id',
-            type: 'varchar',
+            type: 'uuid',
             isPrimary: true,
-            generationStrategy: 'uuid',
             default: 'uuid_generate_v4()',
           },
           {
             name: 'content',
             type: 'varchar',
             isNullable: false,
+          },
+          {
+            name: 'ownerId',
+            type: 'uuid',
+          },
+          {
+            name: 'tweetId',
+            type: 'uuid',
           },
           {
             name: 'createdAt',
@@ -33,8 +40,9 @@ export class CreateTweetComments1588398257301 implements MigrationInterface {
     );
 
     await queryRunner.createForeignKey(
-      'users',
+      'tweet_comments',
       new TableForeignKey({
+        name: 'CommentOwner',
         columnNames: ['ownerId'],
         referencedTableName: 'users',
         referencedColumnNames: ['id'],
@@ -43,8 +51,9 @@ export class CreateTweetComments1588398257301 implements MigrationInterface {
     );
 
     await queryRunner.createForeignKey(
-      'tweets',
+      'tweet_comments',
       new TableForeignKey({
+        name: 'TweetComment',
         columnNames: ['tweetId'],
         referencedTableName: 'tweets',
         referencedColumnNames: ['id'],
@@ -54,6 +63,8 @@ export class CreateTweetComments1588398257301 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
+    await queryRunner.dropForeignKey('tweet_likes', 'CommentOwner');
+    await queryRunner.dropForeignKey('tweet_likes', 'TweetComment');
     await queryRunner.dropTable('tweet_comments');
   }
 }

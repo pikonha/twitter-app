@@ -1,9 +1,4 @@
-import {
-  MigrationInterface,
-  QueryRunner,
-  Table,
-  TableForeignKey,
-} from 'typeorm';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export default class CreateTweets1588373746791 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -13,10 +8,13 @@ export default class CreateTweets1588373746791 implements MigrationInterface {
         columns: [
           {
             name: 'id',
-            type: 'varchar',
+            type: 'uuid',
             isPrimary: true,
-            generationStrategy: 'uuid',
             default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'ownerId',
+            type: 'uuid',
           },
           {
             name: 'content',
@@ -29,15 +27,6 @@ export default class CreateTweets1588373746791 implements MigrationInterface {
             default: 'CURRENT_TIMESTAMP',
           },
         ],
-      }),
-    );
-    await queryRunner.createForeignKey(
-      'tweets',
-      new TableForeignKey({
-        columnNames: ['ownerId'],
-        referencedTableName: 'users',
-        referencedColumnNames: ['id'],
-        onDelete: 'CASCADE',
       }),
     );
   }
