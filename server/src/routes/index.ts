@@ -1,12 +1,29 @@
 import { Router } from 'express';
-// const bcrypt = require("bcryptjs");
-// const jwt = require("jsonwebtoken");
+
+import TweetRoutes from './tweets.routes';
 
 // const authenticate = require("./auth");
-// const User = require("../model/User");
-// const Tweet = require("../model/Tweet");
 
-const router = new Router();
+const router = Router();
+
+router.use('/tweets', TweetRoutes);
+
+// Middleware recurso não encontrado
+router.use((req, res, next) => {
+  const error = new Error(`Not found - ${req.originalUrl}`);
+  res.status(404);
+  next(error);
+});
+
+// Middeware de tratamento de erro
+// router.use((error, req, res, next) => {
+//   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+//   res.statusCode = statusCode;
+//   res.json({
+//     message: error.message,
+//     stack: process.env.NODE_ENV === 'production' ? '🤓' : error.stack,
+//   });
+// });
 
 export default router;
 
@@ -205,5 +222,3 @@ export default router;
 //     next(err);
 //   }
 // });
-
-// module.exports = router;
