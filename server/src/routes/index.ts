@@ -1,12 +1,12 @@
 import { Router } from 'express';
 
 import TweetRoutes from './tweets.routes';
-
-// const authenticate = require("./auth");
+import UsersRoutes from './users.routes';
 
 const router = Router();
 
 router.use('/tweets', TweetRoutes);
+router.use('/users', UsersRoutes);
 
 // Middleware recurso não encontrado
 router.use((req, res, next) => {
@@ -16,14 +16,14 @@ router.use((req, res, next) => {
 });
 
 // Middeware de tratamento de erro
-// router.use((error, req, res, next) => {
-//   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-//   res.statusCode = statusCode;
-//   res.json({
-//     message: error.message,
-//     stack: process.env.NODE_ENV === 'production' ? '🤓' : error.stack,
-//   });
-// });
+router.use((error, req, res, next) => {
+  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  res.statusCode = statusCode;
+  res.json({
+    message: error.message,
+    stack: process.env.NODE_ENV === 'production' ? '🤓' : error.stack,
+  });
+});
 
 export default router;
 
