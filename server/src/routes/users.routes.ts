@@ -6,7 +6,7 @@ import User from '../models/User';
 
 const router = Router();
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   try {
     const { name, email, username, password } = req.body;
 
@@ -19,7 +19,8 @@ router.post('/', async (req, res) => {
 
     return res.status(201).send({ data: user });
   } catch (error) {
-    return res.status(404).send({ message: error.message });
+    res.status(404);
+    next(error);
   }
 });
 
@@ -30,13 +31,18 @@ router.get('/', async (req, res) => {
   return res.send({ data: users });
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
   const { id } = req.params;
 
-  const userRepository = getRepository(User);
-  const user = await userRepository.findOne({ where: { id } });
+  try {
+    const userRepository = getRepository(User);
+    const user = await userRepository.findOne({ where: { id } });
 
-  return res.send({ data: user });
+    return res.send({ data: user });
+  } catch (error) {
+    res.status(404);
+    next(error);
+  }
 });
 
 export default router;
