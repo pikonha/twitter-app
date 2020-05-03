@@ -1,11 +1,8 @@
 import { Router } from 'express';
-import { getCustomRepository } from 'typeorm';
-
-// const bcrypt = require("bcryptjs");
-// const jwt = require("jsonwebtoken");
+import { getRepository } from 'typeorm';
 
 import CreateTweetService from '../services/CreateTweetService';
-import TweetRepository from '../repositories/TweetRepository';
+import Tweet from '../models/Tweet';
 
 const router = Router();
 
@@ -20,14 +17,14 @@ router.post('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
-  const tweetRepository = getCustomRepository(TweetRepository);
+  const tweetRepository = getRepository(Tweet);
   const tweet = await tweetRepository.find({ id });
 
   res.send({ data: tweet });
 });
 
 router.get('/', async (req, res) => {
-  const tweetRepository = getCustomRepository(TweetRepository);
+  const tweetRepository = getRepository(Tweet);
   const tweets = await tweetRepository.find();
 
   res.send({ data: tweets });

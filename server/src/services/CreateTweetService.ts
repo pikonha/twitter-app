@@ -1,15 +1,14 @@
-import { getCustomRepository } from 'typeorm';
+import { getRepository } from 'typeorm';
 
 import Tweet from '../models/Tweet';
-import TweetRepository from '../repositories/TweetRepository';
 
 interface Request {
-  ownerId: String;
-  content: String;
+  ownerId: string;
+  content: string;
 }
 
 async function execute({ ownerId, content }: Request): Promise<Tweet> {
-  const tweetRepository = getCustomRepository(TweetRepository);
+  const tweetRepository = getRepository(Tweet);
 
   const tweet = tweetRepository.create({
     ownerId,

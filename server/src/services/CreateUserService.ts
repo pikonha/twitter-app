@@ -1,24 +1,40 @@
-import { getCustomRepository } from 'typeorm';
+import { getRepository } from 'typeorm';
 
 import User from '../models/User';
-import UserRepository from '../repositories/UserRepository';
 
 interface Request {
-  name: String;
-  username: String;
-  password: String;
+  name: string;
+  email: string;
+  username: string;
+  password: string;
 }
 
-async function execute({ name, username, password }: Request): Promise<User> {
-  const userRepository = getCustomRepository(UserRepository);
+async function execute({
+  name,
+  email,
+  username,
+  password,
+}: Request): Promise<User> {
+  const userRepository = getRepository(User);
+
+  const foundUser = await userRepository.findOne({
+    where: [{ email }, { username }],
+  });
+
+  if (foundUser) {
+    throw new Error('Credentials already in use.');
+  }
 
   const user = userRepository.create({
     name,
+    email,
     username,
     password,
   });
 
   await userRepository.save(user);
+
+  delete user.password;
 
   return user;
 }
