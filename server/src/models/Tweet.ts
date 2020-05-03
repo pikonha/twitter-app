@@ -5,6 +5,8 @@ import {
   ManyToOne,
   OneToMany,
   JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 import User from './User';
@@ -14,16 +16,19 @@ import TweetComment from './TweetComment';
 @Entity('tweets')
 class Tweet {
   @PrimaryGeneratedColumn('uuid')
-  id: String;
+  id: string;
 
   @Column()
-  content: String;
+  content: string;
 
-  @Column('timestamp with time zone')
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
+
   @Column()
-  ownerId: String;
+  ownerId: string;
 
   @ManyToOne(type => User, user => user.tweets)
   @JoinColumn({ name: 'ownerId' })

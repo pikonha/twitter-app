@@ -20,7 +20,6 @@ export class CreateTweetComments1588398257301 implements MigrationInterface {
           {
             name: 'content',
             type: 'varchar',
-            isNullable: false,
           },
           {
             name: 'ownerId',
@@ -31,9 +30,14 @@ export class CreateTweetComments1588398257301 implements MigrationInterface {
             type: 'uuid',
           },
           {
-            name: 'createdAt',
-            type: 'timestamp with time zone',
-            default: 'CURRENT_TIMESTAMP',
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'now()',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'now()',
           },
         ],
       }),

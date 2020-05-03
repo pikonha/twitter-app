@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 import Tweet from './Tweet';
 import TweetLike from './TweetLike';
@@ -7,19 +14,25 @@ import TweetComment from './TweetComment';
 @Entity('users')
 class User {
   @PrimaryGeneratedColumn('uuid')
-  id: String;
+  id: string;
 
   @Column()
-  name: String;
+  name: string;
 
   @Column()
-  username: String;
+  email: string;
 
   @Column()
-  password: String;
+  username: string;
 
-  @Column('timestamp with time zone')
+  @Column()
+  password: string;
+
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 
   @OneToMany(type => Tweet, tweet => tweet.owner)
   tweets: Tweet[];
