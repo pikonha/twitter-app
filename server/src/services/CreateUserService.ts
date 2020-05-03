@@ -1,4 +1,5 @@
 import { getRepository } from 'typeorm';
+import { hash, genSalt } from 'bcryptjs';
 
 import User from '../models/User';
 
@@ -25,11 +26,14 @@ async function execute({
     throw new Error('Credentials already in use.');
   }
 
+  const salt = await genSalt(10);
+  const hashedPassword = await hash(password, salt);
+
   const user = userRepository.create({
     name,
     email,
     username,
-    password,
+    password: hashedPassword,
   });
 
   await userRepository.save(user);
