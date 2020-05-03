@@ -1,5 +1,6 @@
 import express from 'express';
 import morgan from 'morgan';
+import 'reflect-metadata';
 
 import routes from './routes';
 import './database';

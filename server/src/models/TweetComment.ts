@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 
 import Tweet from './Tweet';
 import User from './User';
@@ -8,10 +14,18 @@ class TweetComment {
   @PrimaryGeneratedColumn('uuid')
   id: String;
 
+  @Column()
+  tweetId: User;
+
   @ManyToOne(type => Tweet, tweet => tweet.comments)
+  @JoinColumn({ name: 'tweetId' })
   tweet: Tweet;
 
+  @Column()
+  ownerId: User;
+
   @ManyToOne(type => User, user => user.comments)
+  @JoinColumn({ name: 'ownerId' })
   owner: User;
 
   @Column()

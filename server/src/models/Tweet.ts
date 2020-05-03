@@ -4,6 +4,7 @@ import {
   Column,
   ManyToOne,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 
 import User from './User';
@@ -21,7 +22,11 @@ class Tweet {
   @Column('timestamp with time zone')
   createdAt: Date;
 
+  @Column()
+  ownerId: String;
+
   @ManyToOne(type => User, user => user.tweets)
+  @JoinColumn({ name: 'ownerId' })
   owner: User;
 
   @OneToMany(type => TweetLike, like => like.tweet)
