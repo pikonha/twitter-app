@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import { getRepository } from 'typeorm';
 
-import CreateUserService from '../services/CreateUserService';
 import User from '../models/User';
+import { Auth } from '../middlewares';
+import CreateUserService from '../services/CreateUserService';
 
 const router = Router();
 
@@ -23,6 +24,8 @@ router.post('/', async (req, res, next) => {
     next(error);
   }
 });
+
+router.use(Auth);
 
 router.get('/', async (req, res) => {
   const userRepository = getRepository(User);

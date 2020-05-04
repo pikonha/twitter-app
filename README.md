@@ -1,6 +1,6 @@
 # Twitter APP
 
-This is a Twitter clone app to practice fullstack develop skills.
+This is a Twitter clone app to practice fullstack development.
 
 ## Tools
 
@@ -10,13 +10,15 @@ This is a Twitter clone app to practice fullstack develop skills.
 
 ## Functionalities
 
-- [ ] Sign up
-- [ ] Login
+- [x] Sign up
+- [x] Login
 - [ ] Forget the password
-- [ ] User profile
-- [ ] Create tweet
-- [ ] List tweets
+- [x] User profile
+- [x] Create tweet
+- [x] List tweets
 - [ ] Like tweet
 - [ ] Delete tweet
+- [ ] Commment tweet
+- [ ] Delete tweet commment
 - [ ] Tweet with image
 - [ ] Notifications
