@@ -29,7 +29,12 @@ router.use(Auth);
 
 router.get('/', async (req, res) => {
   const userRepository = getRepository(User);
-  const users = await userRepository.find();
+  const usersModels = await userRepository.find();
+
+  const users = usersModels.map(user => {
+    delete user.password;
+    return user;
+  });
 
   return res.send({ data: users });
 });

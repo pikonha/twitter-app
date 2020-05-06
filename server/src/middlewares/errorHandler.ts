@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction, Errback } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 interface HTTPException {
   status: number;
