@@ -4,6 +4,7 @@
   "main": "src/app.js",
   "license": "MIT",
   "dependencies": {
+    "@types/jsonwebtoken": "^8.3.9",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -16,8 +17,8 @@
     "uuidv4": "^6.0.8"
   },
   "devDependencies": {
-    "@types/express": "^4.17.6",
     "@types/bcryptjs": "^2.4.2",
+    "@types/express": "^4.17.6",
     "@types/morgan": "^1.9.0",
     "@typescript-eslint/eslint-plugin": "^2.30.0",
     "@typescript-eslint/parser": "^2.30.0",

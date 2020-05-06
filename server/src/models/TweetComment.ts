@@ -17,13 +17,13 @@ class TweetComment {
   id: string;
 
   @Column()
-  tweetId: User;
+  tweetId: string;
 
   @Column()
-  ownerId: User;
+  ownerId: string;
 
   @Column()
-  content: String;
+  content: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

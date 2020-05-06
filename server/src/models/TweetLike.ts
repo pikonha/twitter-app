@@ -17,10 +17,10 @@ class TweetLike {
   id: string;
 
   @Column()
-  tweetId: User;
+  tweetId: string;
 
   @Column()
-  ownerId: User;
+  ownerId: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

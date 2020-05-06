@@ -1,15 +1,24 @@
 import { Router } from 'express';
 import { getRepository } from 'typeorm';
 
-import CreateTweetService from '../services/CreateTweetService';
+import { Auth } from '../middlewares';
 import Tweet from '../models/Tweet';
+import CreateTweetService from '../services/CreateTweetService';
+import LikeRoutes from './likes.routes';
 
 const router = Router();
 
-router.post('/', async (req, res) => {
-  const { ownerId, content } = req.body;
+router.use(Auth);
+router.use(LikeRoutes);
 
-  const tweet = await CreateTweetService.execute({ ownerId, content });
+router.post('/', async (req, res) => {
+  const { content } = req.body;
+  const { id: ownerId } = req.user;
+
+  const tweet = await CreateTweetService.execute({
+    ownerId,
+    content,
+  });
 
   res.status(201).send({ data: tweet });
 });

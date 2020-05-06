@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import { getRepository } from 'typeorm';
 
-import CreateUserService from '../services/CreateUserService';
 import User from '../models/User';
+import { Auth } from '../middlewares';
+import CreateUserService from '../services/CreateUserService';
 
 const router = Router();
 
@@ -24,9 +25,16 @@ router.post('/', async (req, res, next) => {
   }
 });
 
+router.use(Auth);
+
 router.get('/', async (req, res) => {
   const userRepository = getRepository(User);
-  const users = await userRepository.find();
+  const usersModels = await userRepository.find();
+
+  const users = usersModels.map(user => {
+    delete user.password;
+    return user;
+  });
 
   return res.send({ data: users });
 });
