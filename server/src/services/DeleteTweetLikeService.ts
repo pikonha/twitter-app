@@ -1,6 +1,7 @@
 import TweetLike from '../models/TweetLike';
 import { getRepository } from 'typeorm';
-import CustomError from '../utils/customError';
+
+import AppError from '../errors/AppError';
 
 interface Request {
   tweetId: string;
@@ -24,11 +25,11 @@ async function execute({
   });
 
   if (!like) {
-    throw new CustomError(404, 'Tweet was not found.');
+    throw new AppError('Tweet was not found.', 404);
   }
 
   if (like.ownerId !== ownerId) {
-    throw new CustomError(302, 'Invalid action.');
+    throw new AppError('Invalid action.', 302);
   }
 
   await likeRepository.delete({ id: likeId, tweetId });

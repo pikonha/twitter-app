@@ -1,21 +1,24 @@
 import { Request, Response, NextFunction } from 'express';
 
-interface HTTPException {
-  status: number;
-  message: string;
-  stack: string;
-}
+import AppError from '../errors/AppError';
 
 export default (
-  error: HTTPException,
+  error: Error,
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-  res.statusCode = statusCode;
-  res.json({
-    message: error.message,
+  if (error instanceof AppError) {
+    return res.status(error.statusCode).send({
+      status: 'error',
+      message: error.message,
+      stack: process.env.NODE_ENV === 'production' ? '🤓' : error.stack,
+    });
+  }
+
+  res.status(500).send({
+    status: 'error',
+    message: 'Internal server error',
     stack: process.env.NODE_ENV === 'production' ? '🤓' : error.stack,
   });
 };

@@ -21,6 +21,9 @@ class Tweet {
   @Column()
   content: string;
 
+  @Column()
+  image: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
