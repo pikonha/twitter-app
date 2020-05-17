@@ -7,44 +7,32 @@ import TweetLike from '../models/TweetLike';
 
 const router = Router();
 
-router.post('/:id/likes', async (req, res, next) => {
-  try {
-    const { id: ownerId } = req.user;
-    const { id: tweetId } = req.params;
+router.post('/:id/likes', async (req, res) => {
+  const { id: ownerId } = req.user;
+  const { id: tweetId } = req.params;
 
-    const { like } = await CreateTweetLikeService.execute({
-      ownerId,
-      tweetId,
-    });
+  const { like } = await CreateTweetLikeService.execute({
+    ownerId,
+    tweetId,
+  });
 
-    res.status(201).send(like);
-  } catch (error) {
-    res.status(error.status || 400);
-
-    next(error);
-  }
+  res.status(201).send(like);
 });
 
-router.delete('/:tweetId/likes/:id', async (req, res, next) => {
-  try {
-    const { tweetId, id } = req.params;
-    const { id: ownerId } = req.user;
+router.delete('/:tweetId/likes/:id', async (req, res) => {
+  const { tweetId, id } = req.params;
+  const { id: ownerId } = req.user;
 
-    const like = await DeleteTweetLikeService.execute({
-      likeId: id,
-      tweetId,
-      ownerId,
-    });
+  const like = await DeleteTweetLikeService.execute({
+    likeId: id,
+    tweetId,
+    ownerId,
+  });
 
-    res.send(like);
-  } catch (error) {
-    res.status(error.status || 400);
-
-    next(error);
-  }
+  res.send(like);
 });
 
-router.get('/:id/likes', async (req, res, next) => {
+router.get('/:id/likes', async (req, res) => {
   const { id } = req.params;
 
   const likeRepository = getRepository(TweetLike);
@@ -61,7 +49,7 @@ router.get('/:id/likes', async (req, res, next) => {
   res.send(likes);
 });
 
-router.get('/:tweetId/likes/:id', async (req, res, next) => {
+router.get('/:tweetId/likes/:id', async (req, res) => {
   const { tweetId, id } = req.params;
 
   const likeRepository = getRepository(TweetLike);
