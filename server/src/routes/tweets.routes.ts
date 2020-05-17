@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
     content,
   });
 
-  res.status(201).send({ data: tweet });
+  res.status(201).send(tweet);
 });
 
 router.get('/:id', async (req, res) => {
@@ -29,14 +29,14 @@ router.get('/:id', async (req, res) => {
   const tweetRepository = getRepository(Tweet);
   const tweet = await tweetRepository.find({ id });
 
-  res.send({ data: tweet });
+  res.send(tweet);
 });
 
 router.get('/', async (req, res) => {
   const tweetRepository = getRepository(Tweet);
   const tweets = await tweetRepository.find();
 
-  res.send({ data: tweets });
+  res.send(tweets);
 });
 
 export default router;

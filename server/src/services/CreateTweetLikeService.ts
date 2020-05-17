@@ -3,7 +3,7 @@ import { getRepository } from 'typeorm';
 import User from '../models/User';
 import Tweet from '../models/Tweet';
 import TweetLike from '../models/TweetLike';
-import CustomError from '../utils/customError';
+import AppError from '../errors/AppError';
 
 interface Request {
   tweetId: string;
@@ -32,11 +32,11 @@ async function execute({ tweetId, ownerId }: Request): Promise<Response> {
   });
 
   if (!tweet) {
-    throw new Error('Tweet was not found.');
+    throw new AppError('Tweet was not found.', 404);
   }
 
   if (tweet.likes.some(like => like.owner.id === ownerId)) {
-    throw new CustomError(302, 'Invalid action.');
+    throw new AppError('Invalid action.', 302);
   }
 
   const user = await userRepository.findOne({ where: { id: ownerId } });

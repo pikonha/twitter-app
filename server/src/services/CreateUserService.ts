@@ -2,6 +2,7 @@ import { getRepository } from 'typeorm';
 import { hash, genSalt } from 'bcryptjs';
 
 import User from '../models/User';
+import AppError from '../errors/AppError';
 
 interface Request {
   name: string;
@@ -23,7 +24,7 @@ async function execute({
   });
 
   if (foundUser) {
-    throw new Error('Credentials already in use.');
+    throw new AppError('Credentials already in use.');
   }
 
   const salt = await genSalt(10);

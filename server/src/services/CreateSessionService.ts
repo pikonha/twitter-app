@@ -2,8 +2,9 @@ import { getRepository } from 'typeorm';
 import { compare } from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-import config from '../config';
 import User from '../models/User';
+import authConfig from '../config/auth';
+import AppError from '../errors/AppError';
 
 interface Request {
   username?: string;
@@ -22,7 +23,7 @@ async function execute({
   password,
 }: Request): Promise<Response> {
   if (!username && !email) {
-    throw new Error('Username or email are a required field.');
+    throw new AppError('Username or email are a required field.');
   }
 
   const userRepository = getRepository(User);
@@ -32,18 +33,18 @@ async function execute({
   });
 
   if (!user) {
-    throw new Error('Invalid credentials.');
+    throw new AppError('Invalid credentials.');
   }
 
   const passwordMatch = await compare(password, user.password);
 
   if (!passwordMatch) {
-    throw new Error('Invalid credentials.');
+    throw new AppError('Invalid credentials.');
   }
 
   delete user.password;
 
-  const { secret, expiresIn } = config.jwt;
+  const { secret, expiresIn } = authConfig.jwt;
 
   const token = jwt.sign({ username: user.username }, secret, {
     subject: user.id,

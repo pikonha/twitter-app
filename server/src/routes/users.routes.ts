@@ -1,28 +1,28 @@
 import { Router } from 'express';
 import { getRepository } from 'typeorm';
+import multer from 'multer';
 
 import User from '../models/User';
 import { Auth } from '../middlewares';
+import uploadConfig from '../config/upload';
+
 import CreateUserService from '../services/CreateUserService';
+import UploadUserAvatarService from '../services/UploadUserAvatarService';
 
 const router = Router();
+const upload = multer(uploadConfig);
 
-router.post('/', async (req, res, next) => {
-  try {
-    const { name, email, username, password } = req.body;
+router.post('/', async (req, res) => {
+  const { name, email, username, password } = req.body;
 
-    const user = await CreateUserService.execute({
-      name,
-      email,
-      username,
-      password,
-    });
+  const user = await CreateUserService.execute({
+    name,
+    email,
+    username,
+    password,
+  });
 
-    return res.status(201).send({ data: user });
-  } catch (error) {
-    res.status(404);
-    next(error);
-  }
+  return res.status(201).send(user);
 });
 
 router.use(Auth);
@@ -36,21 +36,27 @@ router.get('/', async (req, res) => {
     return user;
   });
 
-  return res.send({ data: users });
+  return res.send(users);
 });
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
-  try {
-    const userRepository = getRepository(User);
-    const user = await userRepository.findOne({ where: { id } });
+  const userRepository = getRepository(User);
+  const user = await userRepository.findOne({ where: { id } });
 
-    return res.send({ data: user });
-  } catch (error) {
-    res.status(404);
-    next(error);
-  }
+  delete user?.password;
+
+  return res.send(user);
+});
+
+router.patch('/:id', upload.single('avatar'), async (req, res) => {
+  const user = await UploadUserAvatarService.execute({
+    userId: req.user.id,
+    fileName: req.file.filename,
+  });
+
+  res.send(user);
 });
 
 export default router;
