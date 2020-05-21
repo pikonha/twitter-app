@@ -2,10 +2,9 @@
 
 This is a Twitter clone app to practice fullstack development.
 
-## Tools
+## Backend
 
 - Typescript
-- React
 - TypeORM
 
 ## Functionalities
@@ -32,3 +31,8 @@ This is a Twitter clone app to practice fullstack development.
 - [ ] Follow
 - [ ] Forget the password
 - [ ] Tweet with image
+
+## Frontend
+
+- Typescript
+- React
