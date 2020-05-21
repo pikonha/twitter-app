@@ -10,15 +10,25 @@ This is a Twitter clone app to practice fullstack development.
 
 ## Functionalities
 
+### MVP
+
 - [x] Sign up
 - [x] Login
-- [ ] Forget the password
 - [x] User profile
 - [x] Create tweet
+- [x] Delete tweet
 - [x] List tweets
-- [ ] Like tweet
-- [ ] Delete tweet
-- [ ] Commment tweet
-- [ ] Delete tweet commment
-- [ ] Tweet with image
+- [x] Like tweet
+- [x] List likes by user
+- [x] List likes by tweet
+
+### Plus
+
 - [ ] Notifications
+- [ ] Comment tweet
+- [ ] Logout
+- [ ] Like comment
+- [ ] Delete comment
+- [ ] Follow
+- [ ] Forget the password
+- [ ] Tweet with image
